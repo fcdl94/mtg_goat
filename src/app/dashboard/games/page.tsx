@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { prisma } from '@/lib/db';
 import { formatDate } from '@/lib/utils';
+import { GameActionButtons } from '@/components/game-action-buttons';
 
 export default async function GamesPage() {
     const games = await prisma.game.findMany({
@@ -122,19 +123,7 @@ export default async function GamesPage() {
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <Link
-                                                    href={`/dashboard/games/${game.id}/edit`}
-                                                    className="text-amber-600 hover:text-amber-800 mr-4"
-                                                >
-                                                    Edit
-                                                </Link>
-                                                <button
-                                                    className="text-red-600 hover:text-red-800"
-                                                    // In a real app, this would open a confirmation dialog
-                                                    onClick={() => { }}
-                                                >
-                                                    Delete
-                                                </button>
+                                                <GameActionButtons gameId={game.id} />
                                             </td>
                                         </tr>
                                     );

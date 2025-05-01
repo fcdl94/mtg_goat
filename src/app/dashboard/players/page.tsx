@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { prisma } from '@/lib/db';
 import { calculateWinRate } from '@/lib/utils';
+import { PlayerActionButtons } from '@/components/player-action-buttons';
 
 export default async function PlayersPage() {
     const players = await prisma.player.findMany({
@@ -120,19 +121,7 @@ export default async function PlayersPage() {
                                             {player.winRate}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <Link
-                                                href={`/dashboard/players/${player.id}/edit`}
-                                                className="text-blue-600 hover:text-blue-800 mr-4"
-                                            >
-                                                Edit
-                                            </Link>
-                                            <button
-                                                className="text-red-600 hover:text-red-800"
-                                                // In a real app, this would open a confirmation dialog
-                                                onClick={() => { }}
-                                            >
-                                                Delete
-                                            </button>
+                                            <PlayerActionButtons playerId={player.id} />
                                         </td>
                                     </tr>
                                 ))}

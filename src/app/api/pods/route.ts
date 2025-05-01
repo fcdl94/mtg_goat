@@ -3,48 +3,45 @@ import { prisma } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
     try {
-        const formData = await request.formData();
-        const name = formData.get('name') as string;
-        const description = formData.get('description') as string | null;
+        const body = await request.json();
+        const { name, description, isPublic, creatorId } = body;
 
-        // Handle multi-select checkboxes - FormData returns only the first value for a key by default
-        // We need to get all values for the playerIds key
-        const playerIds = formData.getAll('playerIds') as string[];
-
-        if (!name) {
+        // Validate required fields
+        if (!name || typeof isPublic !== "boolean" || !creatorId) {
             return NextResponse.json(
-                { error: 'Pod name is required' },
+                { error: "Missing required fields" },
                 { status: 400 }
             );
         }
 
-        if (playerIds.length === 0) {
-            return NextResponse.json(
-                { error: 'At least one player must be selected' },
-                { status: 400 }
-            );
-        }
-
-        // Create the pod and associate it with the selected players
+        // Create the pod
         const pod = await prisma.pod.create({
             data: {
                 name,
-                description,
+                description: description || null,
+                isPublic,
+                // Also create the pod member record for the creator as an admin
                 players: {
-                    create: playerIds.map(playerId => ({
-                        player: {
-                            connect: { id: playerId }
-                        }
-                    }))
-                }
+                    create: {
+                        player: { connect: { id: creatorId } },
+                        role: "ADMIN",
+                    },
+                },
+            },
+            include: {
+                players: {
+                    include: {
+                        player: true,
+                    },
+                },
             },
         });
 
-        return NextResponse.redirect(new URL('/dashboard/pods', request.url));
+        return NextResponse.json(pod, { status: 201 });
     } catch (error) {
-        console.error('Error creating pod:', error);
+        console.error("Error creating pod:", error);
         return NextResponse.json(
-            { error: 'An error occurred while creating the pod' },
+            { error: "Failed to create pod" },
             { status: 500 }
         );
     }

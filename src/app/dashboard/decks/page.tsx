@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import { prisma } from '@/lib/db';
 import { calculateWinRate } from '@/lib/utils';
+import { DeckActionButtons } from '@/components/deck-action-buttons';
 
 export default async function DecksPage() {
     const decks = await prisma.deck.findMany({
@@ -117,19 +118,7 @@ export default async function DecksPage() {
                                             {deck.winRate}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <Link
-                                                href={`/dashboard/decks/${deck.id}/edit`}
-                                                className="text-green-600 hover:text-green-800 mr-4"
-                                            >
-                                                Edit
-                                            </Link>
-                                            <button
-                                                className="text-red-600 hover:text-red-800"
-                                                // In a real app, this would open a confirmation dialog
-                                                onClick={() => { }}
-                                            >
-                                                Delete
-                                            </button>
+                                            <DeckActionButtons deckId={deck.id} />
                                         </td>
                                     </tr>
                                 ))}

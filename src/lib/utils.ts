@@ -6,11 +6,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(date: Date): string {
-    return new Intl.DateTimeFormat('en-US', {
+    return new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric',
         month: 'short',
         day: 'numeric',
-        year: 'numeric',
-    }).format(date);
+    });
 }
 
 export function calculateWinRate(wins: number, totalGames: number): string {
