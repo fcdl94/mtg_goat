@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MTG Goat - Commander Playgroup Tracker
+
+MTG Goat is a web application for tracking Magic: The Gathering Commander games between friends. It helps you monitor win rates, deck performance, and overall game balance in your playgroup.
+
+## Features
+
+- **Player Management**: Add and manage players in your playgroup
+- **Deck Tracking**: Record commander decks for each player
+- **Pod Organization**: Create pods (playgroups) for separate statistics
+- **Game Recording**: Log games with participating players, decks, and winners
+- **Statistics**: View win rates for players and decks within pods
+
+## Tech Stack
+
+- **Frontend**: Next.js with React, TypeScript, and TailwindCSS
+- **Backend**: Next.js API routes with Prisma ORM
+- **Database**: PostgreSQL
+- **Deployment**: Designed for serverless environments
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js 18+ and npm
+- PostgreSQL database
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository
+   ```
+   git clone https://github.com/yourusername/mtg_goat.git
+   cd mtg_goat
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Install dependencies
+   ```
+   npm install
+   ```
 
-## Learn More
+3. Create a `.env` file in the root directory with your database connection string:
+   ```
+   DATABASE_URL="postgresql://username:password@localhost:5432/mtg_goat"
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. Generate the Prisma client and apply migrations
+   ```
+   npx prisma generate
+   npx prisma migrate dev --name init
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. Start the development server
+   ```
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+6. Visit `http://localhost:3000` to see the application
 
-## Deploy on Vercel
+## Data Model
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Player**: Represents a physical Commander player
+- **Deck**: A Commander deck owned by a player
+- **Pod**: A group of players who play together
+- **Game**: A record of a Commander game with players, decks, and a winner
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deployment
+
+This application is designed to be deployed to serverless environments. You can deploy it to:
+
+- Vercel
+- AWS Lambda
+- Netlify
+- Any other serverless platform that supports Next.js
+
+For the database, you can use:
+- AWS Aurora Serverless
+- Neon.tech
+- Vercel Postgres
+- Or any other PostgreSQL-compatible database
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- Built for Magic: The Gathering Commander players
+- Inspired by the need to track game balance in playgroups

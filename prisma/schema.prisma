@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Player {
+  id        String       @id @default(uuid())
+  name      String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  decks     Deck[]
+  games     GamePlayer[]
+  pods      PlayerPod[]
+}
+
+model Deck {
+  id            String     @id @default(uuid())
+  name          String
+  commanderName String
+  description   String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  playerId      String
+  player        Player     @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  games         GameDeck[]
+}
+
+model Pod {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  games       Game[]
+  players     PlayerPod[]
+}
+
+model PlayerPod {
+  id        String   @id @default(uuid())
+  playerId  String
+  podId     String
+  createdAt DateTime @default(now())
+  player    Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  pod       Pod      @relation(fields: [podId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, podId])
+}
+
+model Game {
+  id        String       @id @default(uuid())
+  playedAt  DateTime     @default(now())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  podId     String
+  winnerId  String?
+  pod       Pod          @relation(fields: [podId], references: [id], onDelete: Cascade)
+  decks     GameDeck[]
+  players   GamePlayer[]
+}
+
+model GamePlayer {
+  id       String @id @default(uuid())
+  gameId   String
+  playerId String
+  game     Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, playerId])
+}
+
+model GameDeck {
+  id       String  @id @default(uuid())
+  gameId   String
+  deckId   String
+  isWinner Boolean @default(false)
+  deck     Deck    @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  game     Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, deckId])
+}
